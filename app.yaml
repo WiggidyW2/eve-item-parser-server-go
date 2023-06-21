@@ -1,0 +1,7 @@
+﻿runtime: go120
+service: eve-item-parser-server-go
+instance_class: F1
+env_variables:
+  SERVE_ADDRESS: 127.0.0.1:8080
+  DB_URL: db.sqlite
+  DB_MAX_READERS: ##DB_MAX_READERS##

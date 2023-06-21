@@ -1,0 +1,11 @@
+﻿steps:
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    sed -i 's/##DB_MAX_READERS##/${_DB_MAX_READERS}/g' app.yaml
+    gcloud app deploy
+timeout: '1600s'
+options:
+  logging: CLOUD_LOGGING_ONLY
