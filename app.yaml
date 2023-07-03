@@ -5,4 +5,4 @@ env_variables:
   SERVE_ADDRESS: 0.0.0.0:8080
   DB_URL: db.sqlite
   # Integer
-  DB_MAX_READERS: ##DB_MAX_READERS##
+  DB_MAX_READERS: '##DB_MAX_READERS##'
