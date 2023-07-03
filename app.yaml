@@ -2,7 +2,7 @@
 service: eve-item-parser-server-go
 instance_class: F1
 env_variables:
-  SERVE_ADDRESS: 127.0.0.1:8080
+  SERVE_ADDRESS: 0.0.0.0:8080
   DB_URL: db.sqlite
   # Integer
   DB_MAX_READERS: ##DB_MAX_READERS##
