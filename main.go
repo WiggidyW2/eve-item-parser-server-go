@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/WiggidyW/eve-item-parser-server-go/server"
+	"github.com/rs/cors"
 
 	pb "github.com/WiggidyW/eve-item-parser-server-go/proto"
 )
@@ -31,10 +32,19 @@ func main() {
 			err,
 		))
 	}
+
 	service, err := server.NewService(db_url, db_max_readers)
 	if err != nil {
 		panic(fmt.Sprintf("Problem initializing service: %e", err))
 	}
 	server := pb.NewItemParserServer(service)
-	http.ListenAndServe(serve_addr, server)
+
+	corsWrapper := cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{"POST"},
+		AllowedHeaders: []string{"Content-Type"},
+	})
+	handler := corsWrapper.Handler(server)
+
+	http.ListenAndServe(serve_addr, handler)
 }

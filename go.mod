@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/evepraisal/go-evepraisal v0.0.0-20230218071758-d9f2139d5843
 	github.com/mattn/go-sqlite3 v1.14.17
+	github.com/rs/cors v1.9.0
 	github.com/twitchtv/twirp v8.1.3+incompatible
 	google.golang.org/protobuf v1.30.0
 )
