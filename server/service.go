@@ -24,5 +24,5 @@ func (sv *Service) Parse(
 	req *pb.ParseReq,
 ) (*pb.ParseRep, error) {
 	parsed_items := Parse(req.Text)
-	return sv.db.QueryNames(ctx, parsed_items)
+	return sv.db.QueryNames(ctx, parsed_items, req.Language)
 }

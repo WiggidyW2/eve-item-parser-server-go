@@ -32,6 +32,7 @@ func NewDb(url string, max_readers int) (*Db, error) {
 func (db *Db) QueryNames(
 	ctx context.Context,
 	items []*ParsedItem,
+	language string,
 ) (*pb.ParseRep, error) {
 	items_len := len(items)
 	parse_rep := &pb.ParseRep{
@@ -52,7 +53,7 @@ func (db *Db) QueryNames(
 			reader_count--
 		}
 		if item_idx < items_len {
-			go db.queryName(ctx, items[item_idx], chn)
+			go db.queryName(ctx, items[item_idx], language, chn)
 			item_idx++
 			reader_count++
 		}
@@ -85,6 +86,7 @@ func updateParseRep(
 func (db *Db) queryName(
 	ctx context.Context,
 	item *ParsedItem,
+	language string,
 	chn chan *queryNameResult,
 ) {
 	var type_id uint32
@@ -92,16 +94,17 @@ func (db *Db) queryName(
 
 	err := db.QueryRowContext(
 		ctx,
-		"SELECT type_id FROM types WHERE name = ?",
+		"SELECT type_id FROM types WHERE (name, language) = (?, ?)",
 		item.Name,
+		language,
 	).Scan(&type_id)
 
-	if err != nil {
-		db_result.Err = err
-	} else if type_id != 0 {
+	if err == nil && type_id != 0 {
 		db_result.KnownItem = item.IntoKnown(type_id)
-	} else /* if type_id == 0 */ {
+	} else if err == sql.ErrNoRows || type_id == 0 {
 		db_result.UnknownItem = item.IntoUnknown()
+	} else /* if err != nil */ {
+		db_result.Err = err
 	}
 
 	chn <- db_result
